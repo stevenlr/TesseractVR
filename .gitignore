@@ -1,0 +1,15 @@
+bin
+bin_unix
+bin64
+doc
+media
+screenshot
+*.o
+*.bat
+tesseract_unix
+lib
+lib64
+src/vcpp
+src/xcode
+src/Makefile
+src/include
