@@ -1130,7 +1130,7 @@ int main(int argc, char **argv)
     inputgrab(grabinput = true);
     ignoremousemotion();
 
-	vr::init();
+    vr::init();
 
     for(;;)
     {
