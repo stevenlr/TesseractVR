@@ -1,6 +1,7 @@
 // main.cpp: initialisation & main loop
 
 #include "engine.h"
+#include "vr.h"
 
 extern void cleargamma();
 
@@ -1128,6 +1129,8 @@ int main(int argc, char **argv)
 
     inputgrab(grabinput = true);
     ignoremousemotion();
+
+	vr::init();
 
     for(;;)
     {

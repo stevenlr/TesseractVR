@@ -406,6 +406,7 @@
     <ClInclude Include="..\engine\light.h" />
     <ClInclude Include="..\engine\mpr.h" />
     <ClInclude Include="..\engine\octa.h" />
+    <ClInclude Include="..\engine\vr.h" />
     <ClInclude Include="..\engine\world.h" />
     <ClInclude Include="..\engine\animmodel.h" />
     <ClInclude Include="..\engine\bih.h" />
@@ -580,6 +581,7 @@
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)engine.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)engine.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="..\engine\vr_config.cpp" />
     <ClCompile Include="..\engine\world.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">engine.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">engine.h</PrecompiledHeaderFile>

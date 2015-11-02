@@ -72,5 +72,8 @@
 #include "iengine.h"
 #include "igame.h"
 
+#include "engine.h"
+#include "vr.h"
+
 #endif
 
