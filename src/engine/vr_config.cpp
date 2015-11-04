@@ -7,6 +7,7 @@ using namespace tinyxml2;
 namespace vr {
 
     vector<virtual_screen> virtual_screens;
+    stereoscopy_adapter *stereo_adapter = nullptr;
 
     namespace {
 
@@ -89,13 +90,23 @@ namespace vr {
             XMLElement *root = doc.RootElement();
             XMLElement *elt;
 
-            elt = root->FirstChildElement("screensconfig");
-
-            if (!elt) {
+            if (!(elt = root->FirstChildElement("screensconfig"))) {
                 fatal("No screens config specified");
             }
 
             screens_config_name = newstring(elt->FirstChild()->Value());
+            
+            if (!(elt = root->FirstChildElement("stereoscopytype"))) {
+                fatal("No stereoscopy type specified");
+            }
+
+            if (strncasecmp("anaglyph", elt->FirstChild()->Value(), 5) == 0) {
+                stereo_adapter = new anaglyph_stereo_adapter;
+            } else if (strncasecmp("quadbuffer", elt->FirstChild()->Value(), 5) == 0) {
+                stereo_adapter = new quadbuffer_stereo_adapter;
+            } else {
+                fatal("Invalid stereo adapter");
+            }
 
             delete[] data;
         }
