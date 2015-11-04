@@ -549,7 +549,7 @@ namespace game
         if(dist <= 0) d = o;
         else
         {
-            vecfromyawpitch(owner->yaw, owner->pitch, 1, 0, d);
+            vecfromyawpitch(owner->yaw, owner->pitch, 1, 1.0f, 0, d);
             float newdist = raycube(owner->o, d, dist, RAY_CLIPMAT|RAY_ALPHAPOLY);
             d.mul(min(newdist, dist)).add(owner->o);
         }

@@ -218,7 +218,7 @@ namespace entities
                 if(ents[e]->attr3 > 0)
                 {
                     vec dir;
-                    vecfromyawpitch(d->yaw, 0, 1, 0, dir);
+                    vecfromyawpitch(d->yaw, 0, 1, 1.0f, 0, dir);
                     float speed = d->vel.magnitude2();
                     d->vel.x = dir.x*speed;
                     d->vel.y = dir.y*speed;
@@ -361,7 +361,7 @@ namespace entities
             case TELEDEST:
             {
                 vec dir;
-                vecfromyawpitch(e.attr1, 0, 1, 0, dir);
+                vecfromyawpitch(e.attr1, 0, 1, 1.0f, 0, dir);
                 renderentarrow(e, dir, 4);
                 break;
             }

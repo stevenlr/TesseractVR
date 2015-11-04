@@ -775,7 +775,7 @@ void renderentradius(extentity &e, bool color)
             if(color) gle::colorf(0, 1, 1);
             entities::entradius(e, color);
             vec dir;
-            vecfromyawpitch(e.attr2, e.attr3, 1, 0, dir);
+            vecfromyawpitch(e.attr2, e.attr3, 1, 1.0f, 0, dir);
             renderentarrow(e, dir, 4);
             break;
         }
@@ -785,7 +785,7 @@ void renderentradius(extentity &e, bool color)
             if(color) gle::colorf(0, 1, 1);
             entities::entradius(e, color);
             vec dir;
-            vecfromyawpitch(e.attr1, 0, 1, 0, dir);
+            vecfromyawpitch(e.attr1, 0, 1, 1.0f, 0, dir);
             renderentarrow(e, dir, 4);
             break;
         }
