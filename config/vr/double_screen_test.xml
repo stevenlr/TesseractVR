@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<virtualscreens>
+	<virtualscreen width="8" height="9" ismain="true">
+		<right x="1" y="0" z="0" />
+		<up x="0" y="1" z="0" />
+		<viewport width="640" height="720" x="640" y="0" />
+	</virtualscreen>
+	
+	<virtualscreen width="8" height="9" ismain="false">
+		<right x="1" y="0" z="0" />
+		<up x="0" y="1" z="0" />
+		<viewport width="640" height="720" x="0" y="0" />
+	</virtualscreen>
+</virtualscreens>

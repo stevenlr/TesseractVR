@@ -1444,6 +1444,7 @@ void renderpostfx(GLuint outfbo)
         int w = tex >= 0 ? max(postfxw>>postfxtexs[tex].scale, 1) : postfxw,
             h = tex >= 0 ? max(postfxh>>postfxtexs[tex].scale, 1) : postfxh;
         glViewport(0, 0, w, h);
+
         p.shader->set();
         LOCALPARAM(params, p.params);
         int tw = w, th = h, tmu = 0;

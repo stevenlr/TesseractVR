@@ -1178,8 +1178,8 @@ void printtimers(int conw, int conh)
 
 void gl_resize()
 {
-    gl_setupframe();
-    glViewport(0, 0, hudw, hudh);
+    gl_setupframe(false, hudw, hudh);
+    glViewport(hudox, hudoy, hudw, hudh);
 }
 
 void gl_init()
@@ -2043,7 +2043,7 @@ void drawminimap()
     drawtex = DRAWTEX_MINIMAP;
 
     GLERROR;
-    gl_setupframe(true);
+    gl_setupframe(true, hudw, hudh);
 
     int size = 1<<minimapsize, sizelimit = min(hwtexsize, min(gw, gh));
     while(size > sizelimit) size /= 2;
@@ -2148,7 +2148,7 @@ void drawminimap()
     glBindFramebuffer_(GL_FRAMEBUFFER, 0);
     glDeleteFramebuffers_(1, &fbo);
 
-    glViewport(0, 0, hudw, hudh);
+    glViewport(hudox, hudoy, hudw, hudh);
 }
 
 void drawcubemap(int size, const vec &o, float yaw, float pitch, const cubemapside &side, bool onlysky)
@@ -2353,6 +2353,7 @@ int xtraverts, xtravertsva;
 
 void gl_drawview()
 {
+    GLuint finalfbo = getfinalfbo();
     GLuint scalefbo = shouldscale();
     if(scalefbo) { vieww = gw; viewh = gh; }
 
@@ -2457,9 +2458,15 @@ void gl_drawview()
 
     if(fogoverlay && fogmat != MAT_AIR) drawfogoverlay(fogmat, fogbelow, clamp(fogbelow, 0.0f, 1.0f), abovemat);
 
-    doaa(setuppostfx(vieww, viewh, scalefbo), processhdr);
-    renderpostfx(scalefbo);
-    if(scalefbo) doscale();
+    doaa(setuppostfx(vieww, viewh, finalfbo), processhdr);
+    renderpostfx(finalfbo);
+    if(scalefbo) finalfbo = doscale();
+
+    glBindFramebuffer_(GL_READ_FRAMEBUFFER, finalfbo);
+    glBindFramebuffer_(GL_DRAW_FRAMEBUFFER, 0);
+    glBlitFramebuffer_(0, 0, hudw, hudh,
+                       hudox, hudoy, hudox + hudw, hudoy + hudh,
+                       GL_COLOR_BUFFER_BIT, GL_NEAREST);
 }
 
 void gl_drawmainmenu()
@@ -2779,20 +2786,22 @@ void gl_drawhud()
     }
 }
 
-int renderw = 0, renderh = 0, hudw = 0, hudh = 0;
+int renderw = 0, renderh = 0, hudw = 0, hudh = 0, hudox = 0, hudoy = 0;
 
-void gl_setupframe(bool force)
+void gl_setupframe(bool force, int width, int height, int offsetx, int offsety)
 {
     extern int scr_w, scr_h;
     renderw = min(scr_w, screenw);
     renderh = min(scr_h, screenh);
-    hudw = screenw;
-    hudh = screenh;
+    hudw = width;
+    hudh = height;
+    hudox = offsetx;
+    hudoy = offsety;
     if(!force) return;
     setuplights();
 }
 
-void gl_drawframe()
+void gl_drawframe(bool ismain)
 {
     synctimers();
     xtravertsva = xtraverts = glde = gbatches = vtris = vverts = 0;
@@ -2803,8 +2812,12 @@ void gl_drawframe()
     viewh = hudh;
     if(mainmenu) gl_drawmainmenu();
     else gl_drawview();
-    UI::render();
-    gl_drawhud();
+
+    if (ismain) {
+        glViewport(hudox, hudoy, hudw, hudh);
+        UI::render();
+        gl_drawhud();
+    }
 }
 
 void cleanupgl()

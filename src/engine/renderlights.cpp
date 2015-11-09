@@ -15,6 +15,7 @@ vector<vec2> msaapositions;
 int aow = -1, aoh = -1;
 GLuint aofbo[4] = { 0, 0, 0, 0 }, aotex[4] = { 0, 0, 0, 0 }, aonoisetex = 0;
 matrix4 eyematrix, worldmatrix, linearworldmatrix, screenmatrix;
+GLuint finalfbo = 0, finaltex = 0;
 
 extern int amd_pf_bug;
 
@@ -372,6 +373,16 @@ void renderao()
 
 void cleanupscale()
 {
+    if (finalfbo) {
+        glDeleteFramebuffers_(1, &finalfbo);
+        finalfbo = 0;
+    }
+
+    if (finaltex) {
+        glDeleteTextures(1, &finaltex);
+        finaltex = 0;
+    }
+
     loopi(2) if(scalefbo[i]) { glDeleteFramebuffers_(1, &scalefbo[i]); scalefbo[i] = 0; }
     loopi(2) if(scaletex[i]) { glDeleteTextures(1, &scaletex[i]); scaletex[i] = 0; }
     scalew = scaleh = -1;
@@ -414,9 +425,14 @@ GLuint shouldscale()
     return scalefbo[0];
 }
 
-void doscale(GLuint outfbo)
+GLuint getfinalfbo()
 {
-    if(!scaletex[0]) return;
+    return finalfbo;
+}
+
+GLuint doscale(GLuint outfbo)
+{
+    if(!scaletex[0]) return 0;
 
     timer *scaletimer = begintimer("scaling");
 
@@ -424,10 +440,10 @@ void doscale(GLuint outfbo)
     {
         glBindFramebuffer_(GL_FRAMEBUFFER, scalefbo[1]);
         glViewport(0, 0, gw, hudh);
-        glBindTexture(GL_TEXTURE_RECTANGLE, scaletex[0]);
+        glBindTexture(GL_TEXTURE_RECTANGLE, finaltex);
         SETSHADER(scalecubicy);
         screenquad(gw, gh);
-        glBindFramebuffer_(GL_FRAMEBUFFER, outfbo);
+        glBindFramebuffer_(GL_FRAMEBUFFER, scaletex[0]);
         glViewport(0, 0, hudw, hudh);
         glBindTexture(GL_TEXTURE_RECTANGLE, scaletex[1]);
         SETSHADER(scalecubicx);
@@ -435,14 +451,16 @@ void doscale(GLuint outfbo)
     }
     else
     {
-        glBindFramebuffer_(GL_FRAMEBUFFER, outfbo);
+        glBindFramebuffer_(GL_FRAMEBUFFER, scaletex[0]);
         glViewport(0, 0, hudw, hudh);
-        glBindTexture(GL_TEXTURE_RECTANGLE, scaletex[0]);
+        glBindTexture(GL_TEXTURE_RECTANGLE, finaltex);
         SETSHADER(scalelinear);
         screenquad(gw, gh);
     }
 
     endtimer(scaletimer);
+
+    return scalefbo[0];
 }
 
 VARFP(glineardepth, 0, 0, 3, initwarning("g-buffer setup", INIT_LOAD, CHANGE_SHADERS));
@@ -721,7 +739,7 @@ void bindgdepth()
 
 void setupgbuffer()
 {
-    int sw = renderw, sh = renderh;
+    int sw = vr::gbufferw, sh = vr::gbufferh;
     if(gscale != 100)
     {
         sw = max((renderw*gscale + 99)/100, 1);
@@ -834,6 +852,16 @@ void setupgbuffer()
         if(glCheckFramebufferStatus_(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             fatal("failed allocating refraction buffer!");
     }
+
+    if (!finalfbo) glGenFramebuffers_(1, &finalfbo);
+    if (!finaltex) glGenTextures(1, &finaltex);
+
+    glBindFramebuffer_(GL_FRAMEBUFFER, finalfbo);
+    createtexture(finaltex, gw, gh, NULL, 3, 1, GL_RGB, GL_TEXTURE_RECTANGLE);
+    glFramebufferTexture2D_(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_RECTANGLE, finaltex, 0);
+
+    if(glCheckFramebufferStatus_(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            fatal("failed allocating final framebuffer!");
 
     glBindFramebuffer_(GL_FRAMEBUFFER, 0);
 
@@ -1271,7 +1299,7 @@ void viewstencil()
     glDisable(GL_STENCIL_TEST);
 
     glBindFramebuffer_(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, hudw, hudh);
+    glViewport(hudox, hudoy, hudw, hudh);
 
     int w = min(hudw, hudh)/2, h = (w*hudh)/hudw;
     SETSHADER(hudrect);
@@ -4812,7 +4840,7 @@ void shademodelpreview(int x, int y, int w, int h, bool background, bool scissor
     GLERROR;
 
     glBindFramebuffer_(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, hudw, hudh);
+    glViewport(hudox, hudoy, hudw, hudh);
 
     if(msaasamples) glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mscolortex);
     else glBindTexture(GL_TEXTURE_RECTANGLE, gcolortex);
@@ -4892,6 +4920,9 @@ void setuplights()
     if(!deferredlightshader) loaddeferredlightshaders();
     if(drawtex == DRAWTEX_MINIMAP && !deferredminimapshader) deferredminimapshader = loaddeferredlightshader(msaasamples ? "mM" : "m");
     setupaa(gw, gh);
+
+
+
     GLERROR;
 }
 

@@ -500,17 +500,13 @@ void setupscreen()
     desktopw = desktop.w;
     desktoph = desktop.h;
 
-    if(scr_h < 0) scr_h = SCR_DEFAULTH;
-    if(scr_w < 0) scr_w = (scr_h*desktopw)/desktoph;
-    scr_w = min(scr_w, desktopw);
-    scr_h = min(scr_h, desktoph);
+    scr_w = vr::screenw;
+    scr_h = vr::screenh;
 
-    int winx = SDL_WINDOWPOS_UNDEFINED, winy = SDL_WINDOWPOS_UNDEFINED, winw = scr_w, winh = scr_h, flags = SDL_WINDOW_RESIZABLE;
+    int winx = SDL_WINDOWPOS_UNDEFINED, winy = SDL_WINDOWPOS_UNDEFINED, winw = scr_w, winh = scr_h, flags = 0;
     if(fullscreen)
     {
-        winw = desktopw;
-        winh = desktoph;
-        flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+        flags |= SDL_WINDOW_FULLSCREEN;
         initwindowpos = true;
     }
 
@@ -544,10 +540,6 @@ void setupscreen()
     }
 
     SDL_GetWindowSize(screen, &screenw, &screenh);
-    renderw = min(scr_w, screenw);
-    renderh = min(scr_h, screenh);
-    hudw = screenw;
-    hudh = screenh;
 }
 
 void resetgl()
@@ -758,13 +750,13 @@ void checkinput()
                         break;
 
                     case SDL_WINDOWEVENT_SIZE_CHANGED:
-                        SDL_GetWindowSize(screen, &screenw, &screenh);
-                        if(!(SDL_GetWindowFlags(screen) & SDL_WINDOW_FULLSCREEN))
-                        {
-                            scr_w = clamp(screenw, SCR_MINW, SCR_MAXW);
-                            scr_h = clamp(screenh, SCR_MINH, SCR_MAXH);
-                        }
-                        gl_resize();
+                        //SDL_GetWindowSize(screen, &screenw, &screenh);
+                        //if(!(SDL_GetWindowFlags(screen) & SDL_WINDOW_FULLSCREEN))
+                        //{
+                        //    scr_w = clamp(screenw, SCR_MINW, SCR_MAXW);
+                        //    scr_h = clamp(screenh, SCR_MINH, SCR_MAXH);
+                        //}
+                        //gl_resize();
                         break;
                 }
                 break;
@@ -1050,6 +1042,10 @@ int main(int argc, char **argv)
     SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
     #endif
     vr::init();
+    const vr::virtual_screen &main_screen = vr::virtual_screens[vr::main_screen];
+    hudw = main_screen.viewport.width;
+    hudh = main_screen.viewport.height;
+
     setupscreen();
     SDL_ShowCursor(SDL_FALSE);
     SDL_StopTextInput(); // workaround for spurious text-input events getting sent on first text input toggle?
@@ -1150,6 +1146,9 @@ int main(int argc, char **argv)
         updatetime();
 
         checkinput();
+
+        hudw = main_screen.viewport.width;
+        hudh = main_screen.viewport.height;
         UI::update();
         menuprocess();
         tryedit();
@@ -1170,10 +1169,15 @@ int main(int argc, char **argv)
 
         if(minimized) continue;
 
-        gl_setupframe(!mainmenu);
+        loopi(vr::virtual_screens.length()) {
+            vr::virtual_screen screen = vr::virtual_screens[i];
 
-        inbetweenframes = false;
-        gl_drawframe();
+            gl_setupframe(!mainmenu, screen.viewport.width, screen.viewport.height,
+                          screen.viewport.x, screen.viewport.y);
+
+            inbetweenframes = false;
+            gl_drawframe(mainmenu || screen.is_main);
+        }
         swapbuffers();
         renderedframe = inbetweenframes = true;
     }

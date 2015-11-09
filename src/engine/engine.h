@@ -28,7 +28,7 @@ extern const uchar faceedgesidx[6][4];
 extern bool inbetweenframes, renderedframe;
 
 extern SDL_Window *screen;
-extern int screenw, screenh, renderw, renderh, hudw, hudh;
+extern int screenw, screenh, renderw, renderh, hudw, hudh, hudox, hudoy;
 
 extern vector<int> entgroup;
 
@@ -152,8 +152,8 @@ extern void gl_resize();
 extern void gl_drawview();
 extern void gl_drawmainmenu();
 extern void gl_drawhud();
-extern void gl_setupframe(bool force = false);
-extern void gl_drawframe();
+extern void gl_setupframe(bool force, int width, int height, int offsetx = 0, int offsety = 0);
+extern void gl_drawframe(bool ismain = false);
 extern void cleanupgl();
 extern void drawminimap();
 extern void enablepolygonoffset(GLenum type);
@@ -352,7 +352,8 @@ extern void copyhdr(int sw, int sh, GLuint fbo, int dw = 0, int dh = 0, bool fli
 extern void setuplights();
 extern void setupgbuffer();
 extern GLuint shouldscale();
-extern void doscale(GLuint outfbo = 0);
+extern GLuint getfinalfbo();
+extern GLuint doscale(GLuint outfbo = 0);
 extern bool debuglights();
 extern void cleanuplights();
 

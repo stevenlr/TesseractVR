@@ -78,6 +78,11 @@ namespace vr {
 
     extern vector<virtual_screen> virtual_screens;
     extern stereoscopy_adapter *stereo_adapter;
+    extern int screenw;
+    extern int screenh;
+    extern int gbufferw;
+    extern int gbufferh;
+    extern int main_screen;
 
     void init();
 

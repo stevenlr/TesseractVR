@@ -8,6 +8,11 @@ namespace vr {
 
     vector<virtual_screen> virtual_screens;
     stereoscopy_adapter *stereo_adapter = nullptr;
+    int screenw = 0;
+    int screenh = 0;
+    int gbufferw = 0;
+    int gbufferh = 0;
+    int main_screen = -1;
 
     namespace {
 
@@ -34,6 +39,7 @@ namespace vr {
 
             XMLElement *root = doc.RootElement();
             XMLElement *elt = root->FirstChildElement("virtualscreen");
+            int i = 0;
 
             while (elt) {
                 virtual_screen screen;
@@ -64,7 +70,21 @@ namespace vr {
 
                 virtual_screens.put(screen);
 
+                screenw = max(screenw, screen.viewport.x + screen.viewport.width);
+                screenh = max(screenh, screen.viewport.y + screen.viewport.height);
+                gbufferw = max(gbufferw, screen.viewport.width);
+                gbufferh = max(gbufferh, screen.viewport.height);
+
+                if (screen.is_main) {
+                    main_screen = i;
+                }
+
                 elt = elt->NextSiblingElement("virtualscreen");
+                i++;
+            }
+
+            if (main_screen < 0) {
+                fatal("No main screen found");
             }
 
             delete[] data;
