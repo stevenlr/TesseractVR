@@ -12,6 +12,7 @@ namespace vr {
     int screenh = 0;
     int gbufferw = 0;
     int gbufferh = 0;
+    float eyesdistance = 0;
     int main_screen = -1;
 
     namespace {
@@ -43,11 +44,13 @@ namespace vr {
 
             while (elt) {
                 virtual_screen screen;
+                XMLElement *p_elt = elt->FirstChildElement("pos");
                 XMLElement *r_elt = elt->FirstChildElement("right");
                 XMLElement *u_elt = elt->FirstChildElement("up");
                 XMLElement *v_elt = elt->FirstChildElement("viewport");
+                vec right, up, front;
 
-                if (!r_elt || !u_elt || !v_elt) {
+                if (!p_elt || !r_elt || !u_elt || !v_elt) {
                     fatal("Invalid virtual screens configuration file");
                 }
 
@@ -55,13 +58,25 @@ namespace vr {
                 screen.height = elt->FloatAttribute("height");
                 screen.is_main = elt->BoolAttribute("ismain");
 
-                screen.right.x = r_elt->FloatAttribute("x");
-                screen.right.y = r_elt->FloatAttribute("y");
-                screen.right.z = r_elt->FloatAttribute("z");
+                screen.o_screen_cave.x = p_elt->FloatAttribute("x");
+                screen.o_screen_cave.y = p_elt->FloatAttribute("y");
+                screen.o_screen_cave.z = p_elt->FloatAttribute("z");
 
-                screen.up.x = u_elt->FloatAttribute("x");
-                screen.up.y = u_elt->FloatAttribute("y");
-                screen.up.z = u_elt->FloatAttribute("z");
+                right.x = r_elt->FloatAttribute("x");
+                right.y = r_elt->FloatAttribute("y");
+                right.z = r_elt->FloatAttribute("z");
+
+                up.x = u_elt->FloatAttribute("x");
+                up.y = u_elt->FloatAttribute("y");
+                up.z = u_elt->FloatAttribute("z");
+
+                right.normalize();
+                up.normalize();
+                front = right.cross(right, up);
+
+                screen.p_screen_cave.a = vec4(right);
+                screen.p_screen_cave.b = vec4(front);
+                screen.p_screen_cave.c = vec4(up);
 
                 screen.viewport.width = v_elt->IntAttribute("width");
                 screen.viewport.height = v_elt->IntAttribute("height");
@@ -127,6 +142,12 @@ namespace vr {
             } else {
                 fatal("Invalid stereo adapter");
             }
+
+            if (!(elt = root->FirstChildElement("eyesdistance"))) {
+                fatal("No interpupillary distance specified");
+            }
+
+            elt->QueryFloatText(&eyesdistance);
 
             delete[] data;
         }

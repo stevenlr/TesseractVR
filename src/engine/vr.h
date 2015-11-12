@@ -64,8 +64,8 @@ namespace vr {
     struct virtual_screen {
         float width;
         float height;
-        vec up;
-        vec right;
+        matrix4 p_screen_cave;
+        vec o_screen_cave;
         bool is_main;
 
         struct {
@@ -76,6 +76,8 @@ namespace vr {
         } viewport;
     };
 
+    // CONFIG =================================================================
+
     extern vector<virtual_screen> virtual_screens;
     extern stereoscopy_adapter *stereo_adapter;
     extern int screenw;
@@ -83,8 +85,21 @@ namespace vr {
     extern int gbufferw;
     extern int gbufferh;
     extern int main_screen;
+    extern float eyesdistance;
 
     void init();
+
+    // PROJECTION =============================================================
+
+    extern bool projection_initialized;
+    extern vec o_player_cave;
+    extern vec o_cave_camera;
+    extern vec o_camera_world;
+    extern matrix4 p_camera_world;
+    extern matrix4 p_cave_camera;
+    extern const float world_scale;
+
+    void update_camera();
 
 }
 

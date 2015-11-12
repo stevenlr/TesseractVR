@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <virtualscreens>
-	<virtualscreen width="16" height="9" ismain="true">
+	<virtualscreen width="0.4" height="0.22" ismain="true">
+		<pos x="0" y="0.11" z="0" />
 		<right x="1" y="0" z="0" />
 		<up x="0" y="1" z="0" />
 		<viewport width="1280" height="720" x="0" y="0" />

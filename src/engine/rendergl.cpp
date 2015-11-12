@@ -1472,6 +1472,8 @@ void recomputecamera()
     }
 
     setviewcell(camera1->o);
+
+    vr::update_camera();
 }
 
 float calcfrustumboundsphere(float nearplane, float farplane,  const vec &pos, const vec &view, vec &center)
