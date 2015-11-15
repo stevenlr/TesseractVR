@@ -3,6 +3,10 @@
 
 namespace vr {
 
+    enum Eye {
+        Left, Right
+    };
+
     class stereoscopy_adapter {
     public:
         virtual ~stereoscopy_adapter() {}
@@ -12,6 +16,15 @@ namespace vr {
         virtual void begin_left() = 0;
         virtual void begin_right() = 0;
         virtual void end_frame() = 0;
+
+        void begin_eye(Eye eye)
+        {
+            if (eye == Left) {
+                this->begin_left();
+            } else {
+                this->begin_right();
+            }
+        }
     };
 
     class anaglyph_stereo_adapter : public stereoscopy_adapter {
@@ -22,13 +35,11 @@ namespace vr {
         void begin_left() override
         {
             glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
 
         void begin_right() override
         {
             glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_TRUE);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
 
         void end_frame() override
@@ -49,13 +60,11 @@ namespace vr {
         void begin_left() override
         {
             glDrawBuffer(GL_BACK_LEFT);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
 
         void begin_right() override
         {
             glDrawBuffer(GL_BACK_RIGHT);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         }
 
         void end_frame() override {}
@@ -87,19 +96,20 @@ namespace vr {
     extern int main_screen;
     extern float eyesdistance;
 
-    void init();
+    extern void init();
 
     // PROJECTION =============================================================
 
     extern bool projection_initialized;
+    extern quat q_player_cave;
     extern vec o_player_cave;
-    extern vec o_cave_camera;
     extern vec o_camera_world;
     extern matrix4 p_camera_world;
     extern matrix4 p_cave_camera;
     extern const float world_scale;
 
-    void update_camera();
+    extern void update_camera();
+    extern void compute_projection(int screenid, Eye eye, float near, float far, matrix4 &m);
 
 }
 

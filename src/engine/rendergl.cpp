@@ -2353,7 +2353,7 @@ vec calcmodelpreviewpos(const vec &radius, float &yaw)
 
 int xtraverts, xtravertsva;
 
-void gl_drawview()
+void gl_drawview(int screenid, vr::Eye eye)
 {
     GLuint finalfbo = getfinalfbo();
     GLuint scalefbo = shouldscale();
@@ -2377,7 +2377,7 @@ void gl_drawview()
 
     farplane = worldsize*2;
 
-    projmatrix.perspective(fovy, aspect, nearplane, farplane);
+    vr::compute_projection(screenid, eye, nearplane, farplane, projmatrix);
     setcamprojmatrix();
 
     glEnable(GL_CULL_FACE);
@@ -2464,6 +2464,7 @@ void gl_drawview()
     renderpostfx(finalfbo);
     if(scalefbo) finalfbo = doscale();
 
+    vr::stereo_adapter->begin_eye(eye);
     glBindFramebuffer_(GL_READ_FRAMEBUFFER, finalfbo);
     glBindFramebuffer_(GL_DRAW_FRAMEBUFFER, 0);
     glBlitFramebuffer_(0, 0, hudw, hudh,
@@ -2803,7 +2804,7 @@ void gl_setupframe(bool force, int width, int height, int offsetx, int offsety)
     setuplights();
 }
 
-void gl_drawframe(bool ismain)
+void gl_drawframe(int screenid, bool ismain)
 {
     synctimers();
     xtravertsva = xtraverts = glde = gbatches = vtris = vverts = 0;
@@ -2812,14 +2813,26 @@ void gl_drawframe(bool ismain)
     fovy = 2*atan2(tan(curfov/2*RAD), aspect)/RAD;
     vieww = hudw;
     viewh = hudh;
-    if(mainmenu) gl_drawmainmenu();
-    else gl_drawview();
 
-    if (ismain) {
-        glViewport(hudox, hudoy, hudw, hudh);
-        UI::render();
-        gl_drawhud();
+    vr::stereo_adapter->begin_frame();
+
+    loopi(2) {
+        vr::Eye eye = (i == 0) ? vr::Left : vr::Right;
+        
+        vr::stereo_adapter->begin_eye(eye);
+
+        if(mainmenu) gl_drawmainmenu();
+        else gl_drawview(screenid, eye);
+
+        if (ismain) {
+            vr::stereo_adapter->begin_eye(eye);
+            glViewport(hudox, hudoy, hudw, hudh);
+            UI::render();
+            gl_drawhud();
+        }
     }
+
+    vr::stereo_adapter->end_frame();
 }
 
 void cleanupgl()

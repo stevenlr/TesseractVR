@@ -72,11 +72,12 @@ namespace vr {
 
                 right.normalize();
                 up.normalize();
-                front = right.cross(right, up);
+                front.cross(right, up);
 
-                screen.p_screen_cave.a = vec4(right);
-                screen.p_screen_cave.b = vec4(front);
-                screen.p_screen_cave.c = vec4(up);
+                screen.p_screen_cave.a = vec4(right, 0);
+                screen.p_screen_cave.b = vec4(up, 0);
+                screen.p_screen_cave.c = vec4(front, 0);
+                screen.p_screen_cave.d = vec4(0, 0, 0, 1);
 
                 screen.viewport.width = v_elt->IntAttribute("width");
                 screen.viewport.height = v_elt->IntAttribute("height");

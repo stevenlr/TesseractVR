@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <config>
-	<screensconfig>single_screen_test</screensconfig>
+	<screensconfig>double_screen_test</screensconfig>
 	<stereoscopytype>anaglyph</stereoscopytype>
 	<eyesdistance>0.064</eyesdistance>
 </config>

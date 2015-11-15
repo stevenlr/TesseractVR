@@ -966,7 +966,8 @@ int main(int argc, char **argv)
     #endif
     #endif
 
-    setlogfile(NULL);
+    //setlogfile(NULL);
+    setlogfile("log.txt");
 
     int dedicated = 0;
     char *load = NULL, *initscript = NULL;
@@ -1176,7 +1177,7 @@ int main(int argc, char **argv)
                           screen.viewport.x, screen.viewport.y);
 
             inbetweenframes = false;
-            gl_drawframe(mainmenu || screen.is_main);
+            gl_drawframe(i, mainmenu || screen.is_main);
         }
         swapbuffers();
         renderedframe = inbetweenframes = true;
