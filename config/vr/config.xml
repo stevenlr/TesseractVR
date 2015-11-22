@@ -2,5 +2,6 @@
 <config>
 	<screensconfig>double_screen_test</screensconfig>
 	<stereoscopytype>anaglyph</stereoscopytype>
-	<eyesdistance>0.064</eyesdistance>
+	<eyesdistance>0</eyesdistance>
+	<!-- 0.064 -->
 </config>

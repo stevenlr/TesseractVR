@@ -1186,6 +1186,7 @@ COMMAND(pvsstats, "");
 
 static inline bool pvsoccluded(uchar *buf, const ivec &co, int size, const ivec &bbmin, const ivec &bbmax)
 {
+    return false;
     uchar leafmask = buf[0];
     loopoctabox(co, size, bbmin, bbmax)
     {
@@ -1203,6 +1204,7 @@ static inline bool pvsoccluded(uchar *buf, const ivec &co, int size, const ivec 
 
 static inline bool pvsoccluded(uchar *buf, const ivec &bbmin, const ivec &bbmax)
 {
+    return false;
     int diff = (bbmin.x^bbmax.x) | (bbmin.y^bbmax.y) | (bbmin.z^bbmax.z);
     if(diff&~((1<<worldscale)-1)) return false;
     int scale = worldscale-1;
@@ -1223,11 +1225,13 @@ static inline bool pvsoccluded(uchar *buf, const ivec &bbmin, const ivec &bbmax)
 
 bool pvsoccluded(const ivec &bbmin, const ivec &bbmax)
 {
+    return false;
     return curpvs!=NULL && pvsoccluded(curpvs, bbmin, bbmax);
 }
 
 bool pvsoccludedsphere(const vec &center, float radius)
 {
+    return false;
     if(curpvs==NULL) return false;
     ivec bbmin(vec(center).sub(radius)), bbmax(vec(center).add(radius+1));
     return pvsoccluded(curpvs, bbmin, bbmax);
@@ -1235,6 +1239,7 @@ bool pvsoccludedsphere(const vec &center, float radius)
 
 bool waterpvsoccluded(int height)
 {
+    return false;
     if(!curwaterpvs) return false;
     if(lockedpvs)
     {

@@ -4,7 +4,7 @@
 namespace vr {
 
     enum Eye {
-        Left, Right
+        Left, Right, Center
     };
 
     class stereoscopy_adapter {
@@ -107,9 +107,11 @@ namespace vr {
     extern matrix4 p_camera_world;
     extern matrix4 p_cave_camera;
     extern const float world_scale;
+    extern Eye current_eye;
 
     extern void update_camera();
     extern void compute_projection(int screenid, Eye eye, float near, float far, matrix4 &m);
+    extern void compute_camera(Eye eye, matrix4 &cammatrix);
 
 }
 

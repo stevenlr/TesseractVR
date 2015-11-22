@@ -1227,15 +1227,23 @@ vec worldpos, camdir, camright, camup;
 void setcammatrix()
 {
     // move from RH to Z-up LH quake style worldspace
-    cammatrix = viewmatrix;
-    cammatrix.rotate_around_y(camera1->roll*RAD);
-    cammatrix.rotate_around_x(camera1->pitch*-RAD);
-    cammatrix.rotate_around_z(camera1->yaw*-RAD);
-    cammatrix.translate(vec(camera1->o).neg());
+    if (vr::current_eye == vr::Center) {
+        cammatrix = viewmatrix;
+        cammatrix.rotate_around_y(camera1->roll*RAD);
+        cammatrix.rotate_around_x(camera1->pitch*-RAD);
+        cammatrix.rotate_around_z(camera1->yaw*-RAD);
+        cammatrix.translate(vec(camera1->o).neg());
+    } else {
+        vr::compute_camera(vr::current_eye, cammatrix);
+    }
 
     cammatrix.transposedtransformnormal(vec(viewmatrix.b), camdir);
     cammatrix.transposedtransformnormal(vec(viewmatrix.a).neg(), camright);
     cammatrix.transposedtransformnormal(vec(viewmatrix.c), camup);
+
+    camdir.normalize();
+    camright.normalize();
+    camup.normalize();
 
     if(!drawtex)
     {
@@ -2377,6 +2385,7 @@ void gl_drawview(int screenid, vr::Eye eye)
 
     farplane = worldsize*2;
 
+    vr::current_eye = eye;
     vr::compute_projection(screenid, eye, nearplane, farplane, projmatrix);
     setcamprojmatrix();
 
@@ -2819,7 +2828,7 @@ void gl_drawframe(int screenid, bool ismain)
     loopi(2) {
         vr::Eye eye = (i == 0) ? vr::Left : vr::Right;
         
-        vr::stereo_adapter->begin_eye(eye);
+        //vr::stereo_adapter->begin_eye(eye);
 
         if(mainmenu) gl_drawmainmenu();
         else gl_drawview(screenid, eye);

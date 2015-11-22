@@ -78,6 +78,7 @@ namespace vr {
                 screen.p_screen_cave.b = vec4(up, 0);
                 screen.p_screen_cave.c = vec4(front, 0);
                 screen.p_screen_cave.d = vec4(0, 0, 0, 1);
+                screen.p_screen_cave.invert(screen.p_screen_cave);
 
                 screen.viewport.width = v_elt->IntAttribute("width");
                 screen.viewport.height = v_elt->IntAttribute("height");
