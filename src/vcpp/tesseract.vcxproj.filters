@@ -166,13 +166,10 @@
     <ClCompile Include="..\engine\vr_config.cpp">
       <Filter>engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\engine\vr_tracker.cpp">
+    <ClCompile Include="..\engine\vr_gamepad.cpp">
       <Filter>engine</Filter>
     </ClCompile>
     <ClCompile Include="..\engine\vr_input.cpp">
-      <Filter>engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\engine\vr_gamepad.cpp">
       <Filter>engine</Filter>
     </ClCompile>
   </ItemGroup>

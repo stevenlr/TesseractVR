@@ -7,7 +7,14 @@
 //#include "vrpn/vrpn_Button.h"
 
 //class vrpn_TRACKERCB;
-//class vrpn_Tracker_Remote;
+struct _vrpn_ANALOGCB;
+typedef struct _vrpn_ANALOGCB vrpn_ANALOGCB;
+struct _vrpn_BUTTONCB;
+typedef struct _vrpn_BUTTONCB vrpn_BUTTONCB;
+struct _vrpn_BUTTONSTATECB;
+typedef struct _vrpn_BUTTONSTATECB vrpn_BUTTONSTATESCB;
+class vrpn_Analog_Remote;
+class vrpn_Button_Remote;
 
 namespace vr {
 
@@ -30,7 +37,7 @@ namespace vr {
 
     void init();
 
-    //namespace input {
+    namespace input {
 
     //    class Tracker {
     //    public:
@@ -50,33 +57,33 @@ namespace vr {
     //        vrpn_Tracker_Remote *_tracker;
     //    };
 
-    //    class Gamepad {
-    //    public:
-    //        /*static void VRPN_CALLBACK handle_analog_stub(void* userData, const vrpn_ANALOGCB a);
-    //        static void VRPN_CALLBACK handle_button_stub(void* userData, const vrpn_BUTTONCB a);
-    //        static void VRPN_CALLBACK handle_button_states_stub(void* userData, const vrpn_BUTTONSTATESCB a);*/
-    //        Gamepad(char *name);
-    //        ~Gamepad();
-    //        /*void VRPN_CALLBACK handle_analog(void *userdata, const vrpn_ANALOGCB a);
-    //        void VRPN_CALLBACK handle_button(void *userdata, const vrpn_BUTTONCB b);
-    //        void VRPN_CALLBACK handle_button_states(void *userdata, const vrpn_BUTTONSTATESCB b);*/
-    //        void update();
-    //        void getAnalogL(float &x, float &y);
-    //        void getAnalogR(float &x, float &y);
+        class Gamepad {
+        public:
+            Gamepad(char *name);
+            ~Gamepad();
+            void handle_analog(void *userdata, const vrpn_ANALOGCB a);
+            void handle_button(void *userdata, const vrpn_BUTTONCB b);
+            void handle_button_states(void *userdata, const vrpn_BUTTONSTATESCB b);
+            void update();
+            void getAnalogL(float &x, float &y);
+            void getAnalogR(float &x, float &y);
 
-    //    private:
-    //        char *_name;
+        private:
+            char *_name;
 
-    //        /*vrpn_Button_Remote *buttons;
-    //        vrpn_Analog_Remote *analogs;*/
+            vrpn_Button_Remote *buttons;
+            vrpn_Analog_Remote *analogs;
 
-    //        float analogL[2];
-    //        float analogR[2];
-    //    };
+            float analogL[2];
+            float analogR[2];
+        };
 
-    //    extern Gamepad *gamepad;
-
-    //}
+        extern Gamepad *gamepad;
+        bool leftDown = false;
+        bool rightDown = false;
+        bool upDown = false;
+        bool downDown = false;
+    }
 
 }
 
