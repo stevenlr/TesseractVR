@@ -2473,12 +2473,12 @@ void gl_drawview(int screenid, vr::Eye eye)
     renderpostfx(finalfbo);
     if(scalefbo) finalfbo = doscale();
 
+    glBindFramebuffer_(GL_FRAMEBUFFER, 0);
     vr::stereo_adapter->begin_eye(eye);
-    glBindFramebuffer_(GL_READ_FRAMEBUFFER, finalfbo);
-    glBindFramebuffer_(GL_DRAW_FRAMEBUFFER, 0);
-    glBlitFramebuffer_(0, 0, hudw, hudh,
-                       hudox, hudoy, hudox + hudw, hudoy + hudh,
-                       GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glViewport(hudox, hudoy, hudw, hudh);
+    glBindTexture(GL_TEXTURE_RECTANGLE, finalfbo);
+    SETSHADER(scalelinear);
+    screenquad(gw, gh);
 }
 
 void gl_drawmainmenu()
