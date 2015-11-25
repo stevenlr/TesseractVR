@@ -67,6 +67,10 @@ namespace vr {
             void update();
             void getAnalogL(float &x, float &y);
             void getAnalogR(float &x, float &y);
+			void getAnalogBack(float &x, float &y);
+			bool isPressed(int idButton);
+			bool isReleased(int idButton);
+			bool isDown(int idButton);
 
         private:
             char *_name;
@@ -76,13 +80,22 @@ namespace vr {
 
             float analogL[2];
             float analogR[2];
+			float analogBack[2];
+			int *button;
+			bool *buttonPressed;
+			bool *buttonReleased;
+			int nb_buttons;
+			
+			bool isInitialized = false;
         };
 
         extern Gamepad *gamepad;
-        bool leftDown = false;
-        bool rightDown = false;
-        bool upDown = false;
-        bool downDown = false;
+        extern bool leftDown;
+        extern bool rightDown;
+        extern bool upDown;
+        extern bool downDown;
+
+		extern void check_input();
     }
 
 }

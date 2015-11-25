@@ -45,6 +45,12 @@ Gamepad::~Gamepad()
 
 void Gamepad::update()
 {
+	if (isInitialized) {
+		for (int i = 0; i < nb_buttons; ++i) {
+			buttonPressed[i] = false;
+			buttonReleased[i] = false;
+		}
+	}
 	analogs->mainloop();
 	buttons->mainloop();
 }
@@ -53,20 +59,30 @@ void Gamepad::handle_analog(void *userdata, const vrpn_ANALOGCB a)
 {
 	for (int i = 0; i < 2; ++i) {
 		analogL[i] = a.channel[i];
-	}
-	for (int i = 0; i < 2; ++i) {
 		analogR[i] = a.channel[i + 2];
+		analogBack[i] = a.channel[i + 5];
 	}
 }
 
 void Gamepad::handle_button(void *userdata, const vrpn_BUTTONCB b)
 {
-
+	if (button[b.button] == 0) //event = pressed
+		buttonPressed[b.button] = true;
+	else //even = released
+		buttonReleased[b.button] = true;
+	button[b.button] = b.state;
 }
 
 void Gamepad::handle_button_states(void *userdata, const vrpn_BUTTONSTATESCB b)
 {
-
+	nb_buttons = b.num_buttons;
+	button = new int[b.num_buttons];
+	buttonPressed = new bool[b.num_buttons];
+	buttonReleased = new bool[b.num_buttons];
+	for (int i = 0; i < b.num_buttons; ++i) {
+		button[i] = b.states[i];
+	}
+	isInitialized = true;
 }
 
 void Gamepad::getAnalogL(float &x, float &y)
@@ -79,4 +95,25 @@ void Gamepad::getAnalogR(float &x, float &y)
 {
 	x = analogR[0];
 	y = analogR[1];
+}
+
+void Gamepad::getAnalogBack(float &x, float &y)
+{
+	x = analogBack[0];
+	y = analogBack[1];
+}
+
+bool Gamepad::isPressed(int idButton)
+{
+	return buttonPressed[idButton];
+}
+
+bool Gamepad::isReleased(int idButton)
+{
+	return buttonReleased[idButton];
+}
+
+bool Gamepad::isDown(int idButton)
+{
+	return button[idButton] == 1;
 }
