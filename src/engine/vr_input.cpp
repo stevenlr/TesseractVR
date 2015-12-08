@@ -21,6 +21,9 @@ namespace vr {
             gamepad->getAnalogL(x, y);
 			gamepad->getAnalogBack(backLeft, backRight);
 
+			player->movemag = max(fabs(x), fabs(y));
+			logoutf("Movemag : %f\n", player->movemag);
+
             if (x > min_analog) {
                 processkey(SDLK_d, true);
                 rightDown = true;

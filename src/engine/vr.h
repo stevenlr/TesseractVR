@@ -6,15 +6,18 @@
 //#include "vrpn/vrpn_Analog.h"
 //#include "vrpn/vrpn_Button.h"
 
-//class vrpn_TRACKERCB;
+struct _vrpn_TRACKERCB;
+typedef struct _vrpn_TRACKERCB vrpn_TRACKERCB;
 struct _vrpn_ANALOGCB;
 typedef struct _vrpn_ANALOGCB vrpn_ANALOGCB;
 struct _vrpn_BUTTONCB;
 typedef struct _vrpn_BUTTONCB vrpn_BUTTONCB;
 struct _vrpn_BUTTONSTATECB;
 typedef struct _vrpn_BUTTONSTATECB vrpn_BUTTONSTATESCB;
+
 class vrpn_Analog_Remote;
 class vrpn_Button_Remote;
+class vrpn_Tracker_Remote;
 
 namespace vr {
 
@@ -39,23 +42,22 @@ namespace vr {
 
     namespace input {
 
-    //    class Tracker {
-    //    public:
-    //        Tracker(const char* device);
-    //        ~Tracker();
+        class Tracker {
+        public:
+            Tracker(char* device);
+            ~Tracker();
+			void handle_tracker(void *userdata, const vrpn_TRACKERCB t);
+            void getPos(double &x, double &y, double &z) const;
+            void getQuat(double &x, double &y, double &z, double &w) const;
+            void update();
 
-    //        void getPos(double &x, double &y, double &z) const;
-    //        void getQuat(double &x, double &y, double &z, double &w) const;
-    //        void update();
+        private:
+			char *_name;
+            double _pos[3];
+            double _quat[4];
 
-    //        void handle_tracker(void *userdata, const vrpn_TRACKERCB t);
-
-    //    private:
-    //        double _pos[3];
-    //        double _quat[4];
-
-    //        vrpn_Tracker_Remote *_tracker;
-    //    };
+            vrpn_Tracker_Remote *tracker;
+        };
 
         class Gamepad {
         public:
@@ -88,6 +90,8 @@ namespace vr {
 			
 			bool isInitialized = false;
         };
+
+		extern Tracker *tracker;
 
         extern Gamepad *gamepad;
         extern bool leftDown;

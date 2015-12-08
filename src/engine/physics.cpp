@@ -1677,12 +1677,12 @@ void phystest()
 
 COMMAND(phystest, "");
 
-void vecfromyawpitch(float yaw, float pitch, int move, float movemag, int strafe, vec &m) //Velo
+void vecfromyawpitch(float yaw, float pitch, int move, int strafe, vec &m) //Velo
 {
     if(move)
     {
-        m.x = move*movemag*-sinf(RAD*yaw);
-        m.y = move*movemag*cosf(RAD*yaw);
+        m.x = move*-sinf(RAD*yaw);
+        m.y = move*cosf(RAD*yaw);
     }
     else m.x = m.y = 0;
 
@@ -1747,7 +1747,7 @@ void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curt
     vec m(0.0f, 0.0f, 0.0f);
     if((pl->move || pl->strafe) && allowmove)
     {
-        vecfromyawpitch(pl->yaw, floating || water || pl->type==ENT_CAMERA ? pl->pitch : 0, pl->move, pl->movemag, pl->strafe, m);
+        vecfromyawpitch(pl->yaw, floating || water || pl->type==ENT_CAMERA ? pl->pitch : 0, pl->move, pl->strafe, m);
 
         if(!floating && pl->physstate >= PHYS_SLOPE)
         {
@@ -1762,7 +1762,7 @@ void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curt
     }
 
     vec d(m);
-    d.mul(pl->maxspeed);
+    d.mul(pl->maxspeed * pl->movemag);
     if(pl->type==ENT_PLAYER)
     {
         if(floating)

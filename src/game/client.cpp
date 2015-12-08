@@ -15,7 +15,7 @@ namespace game
     void drawminimap(gameent *d, float x, float y, float s)
     {
         vec pos = vec(d->o).sub(minimapcenter).mul(minimapscale).add(0.5f), dir;
-        vecfromyawpitch(camera1->yaw, 0, 1, 1.0f, 0, dir);
+        vecfromyawpitch(camera1->yaw, 0, 1, 0, dir);
         float scale = calcradarscale();
         gle::defvertex(2);
         gle::deftexcoord0();
@@ -1171,7 +1171,7 @@ namespace game
                 roll = clamp(int(p.get()), 0, 180)-90;
                 int mag = p.get(); if(flags&(1<<3)) mag |= p.get()<<8;
                 dir = p.get(); dir |= p.get()<<8;
-                vecfromyawpitch(dir%360, clamp(dir/360, 0, 180)-90, 1, 1.0f, 0, vel);
+                vecfromyawpitch(dir%360, clamp(dir/360, 0, 180)-90, 1, 0, vel);
                 vel.mul(mag/DVELF);
                 if(flags&(1<<4))
                 {
@@ -1179,7 +1179,7 @@ namespace game
                     if(flags&(1<<6))
                     {
                         dir = p.get(); dir |= p.get()<<8;
-                        vecfromyawpitch(dir%360, clamp(dir/360, 0, 180)-90, 1, 1.0f, 0, falling);
+                        vecfromyawpitch(dir%360, clamp(dir/360, 0, 180)-90, 1, 0, falling);
                     }
                     else falling = vec(0, 0, -1);
                     falling.mul(mag/DVELF);
@@ -2125,7 +2125,7 @@ namespace game
             if(!d || d==player1) return;
             player1->o = d->o;
             vec dir;
-            vecfromyawpitch(player1->yaw, player1->pitch, 1, 1.0f, 0, dir);
+            vecfromyawpitch(player1->yaw, player1->pitch, 1, 0, dir);
             player1->o.add(dir.mul(-32));
             player1->resetinterp();
         }
@@ -2137,7 +2137,7 @@ namespace game
         if(player1->state!=CS_EDITING) return;
         player1->o = getselpos();
         vec dir;
-        vecfromyawpitch(player1->yaw, player1->pitch, 1, 1.0f, 0, dir);
+        vecfromyawpitch(player1->yaw, player1->pitch, 1, 0, dir);
         player1->o.add(dir.mul(-32));
         player1->resetinterp();
     }

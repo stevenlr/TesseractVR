@@ -408,7 +408,7 @@ namespace game
         if(!file) return;
 
         vec sway;
-        vecfromyawpitch(d->yaw, 0, 0, 1.0f, 1, sway);
+        vecfromyawpitch(d->yaw, 0, 0, 1, sway);
         float steps = swaydist/swaystep*M_PI;
         sway.mul(swayside*cosf(steps));
         sway.z = swayup*(fabs(sinf(steps)) - 1);
@@ -474,10 +474,10 @@ namespace game
         if(d!=hudplayer() || isthirdperson())
         {
             vec front, right;
-            vecfromyawpitch(d->yaw, d->pitch, 1, 1.0f, 0, front);
+            vecfromyawpitch(d->yaw, d->pitch, 1, 0, front);
             offset.add(front.mul(d->radius));
             offset.z += (d->aboveeye + d->eyeheight)*0.75f - d->eyeheight;
-            vecfromyawpitch(d->yaw, 0, 0, 1.0f, -1, right);
+            vecfromyawpitch(d->yaw, 0, 0, -1, right);
             offset.add(right.mul(0.5f*d->radius));
             offset.add(front);
             return offset;

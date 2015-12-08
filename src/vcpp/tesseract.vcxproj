@@ -584,6 +584,7 @@
     <ClCompile Include="..\engine\vr_config.cpp" />
     <ClCompile Include="..\engine\vr_gamepad.cpp" />
     <ClCompile Include="..\engine\vr_input.cpp" />
+    <ClCompile Include="..\engine\vr_tracker.cpp" />
     <ClCompile Include="..\engine\world.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">engine.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">engine.h</PrecompiledHeaderFile>
