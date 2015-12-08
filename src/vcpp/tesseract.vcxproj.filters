@@ -167,6 +167,13 @@
       <Filter>engine</Filter>
     </ClCompile>
     <ClCompile Include="..\engine\vr_projection.cpp">
+    <ClCompile Include="..\engine\vr_gamepad.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vr_input.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\vr_tracker.cpp">
       <Filter>engine</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1677,7 +1677,7 @@ void phystest()
 
 COMMAND(phystest, "");
 
-void vecfromyawpitch(float yaw, float pitch, int move, int strafe, vec &m)
+void vecfromyawpitch(float yaw, float pitch, int move, int strafe, vec &m) //Velo
 {
     if(move)
     {
@@ -1762,7 +1762,7 @@ void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curt
     }
 
     vec d(m);
-    d.mul(pl->maxspeed);
+    d.mul(pl->maxspeed * pl->movemag);
     if(pl->type==ENT_PLAYER)
     {
         if(floating)

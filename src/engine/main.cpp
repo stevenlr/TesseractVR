@@ -691,6 +691,9 @@ static void checkmousemotion(int &dx, int &dy)
 
 void checkinput()
 {
+	logoutf("Check_input start");
+	vr::input::check_input();
+
     SDL_Event event;
     //int lasttype = 0, lastbut = 0;
     bool mousemoved = false;
@@ -714,8 +717,10 @@ void checkinput()
 
             case SDL_KEYDOWN:
             case SDL_KEYUP:
-                if(keyrepeatmask || !event.key.repeat)
-                    processkey(event.key.keysym.sym, event.key.state==SDL_PRESSED);
+				if (keyrepeatmask || !event.key.repeat) {
+					logoutf("key : %d", event.key.keysym.sym);
+					processkey(event.key.keysym.sym, event.key.state == SDL_PRESSED);
+				}
                 break;
 
             case SDL_WINDOWEVENT:
@@ -793,7 +798,7 @@ void checkinput()
                 break;
         }
     }
-    if(mousemoved) resetmousemotion();
+	if (mousemoved) resetmousemotion();
 }
 
 void swapbuffers(bool overlay)
@@ -966,8 +971,7 @@ int main(int argc, char **argv)
     #endif
     #endif
 
-    //setlogfile(NULL);
-    setlogfile("log.txt");
+    //setlogfile("log.txt");
 
     int dedicated = 0;
     char *load = NULL, *initscript = NULL;
