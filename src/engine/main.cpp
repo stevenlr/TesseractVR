@@ -971,7 +971,7 @@ int main(int argc, char **argv)
     #endif
     #endif
 
-    //setlogfile("log.txt");
+    setlogfile("log.txt");
 
     int dedicated = 0;
     char *load = NULL, *initscript = NULL;
@@ -1006,7 +1006,7 @@ int main(int argc, char **argv)
             case 'w': scr_w = clamp(atoi(&argv[i][2]), SCR_MINW, SCR_MAXW); if(!findarg(argc, argv, "-h")) scr_h = -1; break;
             case 'h': scr_h = clamp(atoi(&argv[i][2]), SCR_MINH, SCR_MAXH); if(!findarg(argc, argv, "-w")) scr_w = -1; break;
             case 'v': vsync = atoi(&argv[i][2]); if(vsync < 0) { vsynctear = 1; vsync = 1; } else vsynctear = 0; break;
-            case 'f': fullscreen = atoi(&argv[i][2]); break;
+			case 'f': fullscreen = atoi(&argv[i][2]); break;
             case 'l':
             {
                 char pkgdir[] = "media/";

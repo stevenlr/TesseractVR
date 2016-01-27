@@ -189,8 +189,13 @@ namespace vr {
         extern bool rightDown;
         extern bool upDown;
         extern bool downDown;
+		extern bool backLeftDown;
+		extern bool backRightDown;
+		extern int mode;
 
 		extern void check_input();
+		extern void check_input_edit();
+		extern void check_input_play();
     }
 
 }
