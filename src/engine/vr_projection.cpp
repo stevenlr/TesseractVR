@@ -31,8 +31,8 @@ namespace vr {
 
         o_camera_world = camera1->headpos();
         p_camera_world.identity();
+		p_camera_world.rotate_around_x(-camera1->pitch * RAD);
         p_camera_world.rotate_around_z(-camera1->yaw * RAD);
-
         /*time += 0.01f;
         virtual_screen &screen = vr::virtual_screens[1];
         screen.p_screen_cave.identity();

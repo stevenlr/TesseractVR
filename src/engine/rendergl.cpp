@@ -1523,6 +1523,8 @@ vec calcavatarpos(const vec &pos, float dist)
     scrpos.z = (eyepos.z*(farplane + nearplane) - 2*nearplane*farplane) / (farplane - nearplane);
     scrpos.w = -eyepos.z;
 
+	logoutf("scr: %f %f %f %f %f", scrpos.x, scrpos.y, scrpos.z, xdist, ydist);
+
     vec worldpos = invcamprojmatrix.perspectivetransform(scrpos);
     vec dir = vec(worldpos).sub(camera1->o).rescale(dist);
     return dir.add(camera1->o);

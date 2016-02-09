@@ -150,7 +150,7 @@ namespace vr {
 			float movingPower = 7.0f * (player->state == CS_EDITING ? 1 : (backRight + 1)/(backLeft + 1));
 			gamepad->getAnalogR(x, y);
 			if (x != y || y != 0)
-				mousemove(x * movingPower, 0); //-y * movingPower);
+				mousemove(x * movingPower, -y * movingPower); //-y * movingPower);
 
 			/*Action emulation*/
 			CHECKBUTTON(6, SDLK_e); // edit mode
